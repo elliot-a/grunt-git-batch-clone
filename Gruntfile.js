@@ -25,11 +25,14 @@ module.exports = function(grunt) {
 
     // Before generating any new files, remove any previously-created files.
     clean: {
-      tests: ['tmp']
+      tests: ['tmp'],
+      clones: ['git_clones']
     },
 
     // Configuration to be run (and then tested).
     batch_git_clone: {
+
+      /*
       default_options: {
         options: {
         },
@@ -37,10 +40,11 @@ module.exports = function(grunt) {
           'tmp/default_options': ['test/fixtures/testing', 'test/fixtures/123']
         }
       },
+      */
+
       custom_options: {
         options: {
-          separator: ': ',
-          punctuation: ' !!!'
+          configFile: 'sample.json'
         },
         files: {
           'tmp/custom_options': ['test/fixtures/testing', 'test/fixtures/123']
