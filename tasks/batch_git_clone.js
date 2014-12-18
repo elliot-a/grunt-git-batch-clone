@@ -23,8 +23,6 @@ module.exports = function(grunt) {
 
     // Merge task-specific and/or target-specific options with these defaults.
     var options = this.options({
-      usePropertyFolders: 'true',
-      rootFolder: 'git_clones',
       configFile:'*EMPTY*'
     });
 
@@ -46,26 +44,30 @@ module.exports = function(grunt) {
       return false;
     }
 
+    // read in the config file.
+    var config = grunt.file.readJSON(options.configFile);
+
+
     // todo - this should probably just delete the appropriate folders, not the whole thing.
     // delete the git clones folder before repopulating it
-    var deleteOldFiles = function(){
+    var deleteOldFiles = function(path){
+
+      grunt.log.writeln('Deleting folder ==> '+path);
 
       var deferred = Q.defer();
 
-      rimraf(options.rootFolder,  function(err){
+      rimraf(path,  function(err){
         if(err) {
-          //console.log('Error deleting stuff : ');
-          //console.log(err);
+          grunt.log.warn('There was an error deleting the existing repo folder : '+path+', error : '+err);
           deferred.reject(err);
         }else{
-          //console.log('No error deleting stuff');
           deferred.resolve();
         }
       });
 
       return deferred.promise;
 
-    }
+    };
 
 
     function cloneRepo(item){
@@ -75,22 +77,18 @@ module.exports = function(grunt) {
       var repoURL = item.repo;
       var path = options.rootFolder+'/'+item.location+'/'+item.repoName;
       var args = ['clone', repoURL, path];
-      grunt.log.writeln('Cloning "'+repoURL+'" ==> '+path);
-      grunt.log.writeln('');
-      var process = spawn('git', args);
 
-      process.stdout.on('data', function(data) {
-        //console.log('stdout: ' + data);
+      deleteOldFiles(path).then(function(){
+
+        grunt.log.writeln('Cloning "'+repoURL+'" ==> '+path);
+        var process = spawn('git', args);
+        process.on('close', function(code) {
+          //console.log('child process exited with code ' + code);
+          deferred.resolve();
+        });
+
       });
 
-      process.stderr.on('data', function(data) {
-        //console.log('stderr: ' + data);
-      });
-
-      process.on('close', function(code) {
-        //console.log('child process exited with code ' + code);
-        deferred.resolve();
-      });
 
       return deferred.promise;
 
@@ -98,41 +96,31 @@ module.exports = function(grunt) {
 
     function map (arr, iterator) {
       // execute the func for each element in the array and collect the results
-      var promises = arr.map(function (el) { return iterator(el) })
-      return Q.all(promises) // return the group promise
+      var promises = arr.map(function (el) { return iterator(el); });
+      return Q.all(promises); // return the group promise
     }
 
 
-    // start the process
-    deleteOldFiles().then(function(){
-
-      // read in the config file.
-      var config = grunt.file.readJSON(options.configFile);
-
-      // prepare array of items to create
-      var items = [];
-      for(var loc in config){
-        for(var repo in config[loc]){
-          var item = {
-            location : loc,
-            repoName : repo,
-            repo     : config[loc][repo]
-          };
-          items.push(item);
-        }
+    // prepare array of items to create
+    var items = [];
+    for(var loc in config){
+      for(var repo in config[loc]){
+        var item = {
+          location : loc,
+          repoName : repo,
+          repo     : config[loc][repo]
+        };
+        items.push(item);
       }
 
-      map(items, cloneRepo).then(function(){
-        grunt.log.writeln('All repos cloned successfully');
-        done();
-      },function(err){
-        grunt.log.warn('An error has occured.');
-      });
+    }
 
+    map(items, cloneRepo).then(function(){
+      grunt.log.writeln('All repos cloned successfully');
+      done();
     },function(err){
-      grunt.log.warn('There was an error deleting the existing repo folder : '+err);
+      grunt.log.warn('An error has occured.');
     });
-
 
   });
 

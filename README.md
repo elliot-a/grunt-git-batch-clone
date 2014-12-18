@@ -1,6 +1,6 @@
 # grunt-batch-git-clone
 
-> Clones multiple git repos into specified folders.
+> Clones multiple git repos into the specified folders.
 
 ## Getting Started
 This plugin requires Grunt `~0.4.5`
@@ -37,17 +37,11 @@ grunt.initConfig({
 
 ### Options
 
-#### options.separator
+#### options.configFile
 Type: `String`
-Default value: `',  '`
+Default value: `none`
 
-A string value that is used to do something with whatever.
-
-#### options.punctuation
-Type: `String`
-Default value: `'.'`
-
-A string value that is used to do something else with whatever else.
+The location of your .json file that describes which git repos you want to clone and where they should go.
 
 ### Usage Examples
 
@@ -57,30 +51,41 @@ In this example, the default options are used to do something with whatever. So 
 ```js
 grunt.initConfig({
   batch_git_clone: {
-    options: {},
-    files: {
-      'dest/default_options': ['src/testing', 'src/123'],
-    },
-  },
-});
-```
-
-#### Custom Options
-In this example, custom options are used to do something else with whatever else. So if the `testing` file has the content `Testing` and the `123` file had the content `1 2 3`, the generated result in this case would be `Testing: 1 2 3 !!!`
-
-```js
-grunt.initConfig({
-  batch_git_clone: {
     options: {
-      separator: ': ',
-      punctuation: ' !!!',
-    },
-    files: {
-      'dest/default_options': ['src/testing', 'src/123'],
-    },
+      configFile:"sample.json"
+    }
   },
 });
 ```
+
+Your json file should be in this format :
+```
+{
+  "clones": {
+    "promises": {
+      "q" : "git@github.com:kriskowal/q.git",
+      "async" : "git@github.com:caolan/async.git"
+    },
+    "rust": {
+      "rust_game" : "git@github.com:benbrunton/rusteroids.git"
+    },
+    "frameworks": {
+      "angular" : "git@github.com:angular/angular.git"
+    }
+  }
+}
+```
+
+This will create the following paths, existing folders will be deleted if they are already there.
+```
+/clones/promises/q
+/clones/promises/async
+/clones/rust/rust_game
+/clones/frameworks/angular
+```
+
+The relevant git repos will then be cloned in to those folders.
+
 
 ## Contributing
 In lieu of a formal styleguide, take care to maintain the existing coding style. Add unit tests for any new or changed functionality. Lint and test your code using [Grunt](http://gruntjs.com/).
