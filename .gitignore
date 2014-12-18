@@ -2,3 +2,7 @@ node_modules
 npm-debug.log
 tmp
 clones
+.DS_Store
+.nodemonignore
+npm-debug.log
+.idea/
