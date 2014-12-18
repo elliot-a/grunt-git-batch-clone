@@ -1,10 +1,11 @@
 {
   "groupA": {
+    "simple-pie" : "https://github.com/slabs-io/output-slab-demo"
   },
   "groupB": {
     "simple-pie" : "https://github.com/slabs-io/output-slab-demo"
   },
   "groupC": {
-    "simple-pie" : "https://github.com/slabs-io/output-slab-demo"
+    "simple-pie" : "git@github.com:angular/angular.git"
   }
 }

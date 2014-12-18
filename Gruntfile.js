@@ -31,23 +31,9 @@ module.exports = function(grunt) {
 
     // Configuration to be run (and then tested).
     batch_git_clone: {
-
-      /*
-      default_options: {
-        options: {
-        },
-        files: {
-          'tmp/default_options': ['test/fixtures/testing', 'test/fixtures/123']
-        }
-      },
-      */
-
       custom_options: {
         options: {
           configFile: 'sample.json'
-        },
-        files: {
-          'tmp/custom_options': ['test/fixtures/testing', 'test/fixtures/123']
         }
       }
     },
