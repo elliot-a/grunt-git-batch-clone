@@ -38,12 +38,6 @@ module.exports = function(grunt) {
       return false;
     }
 
-    // stop users setting the repo folder as root
-    if(options.rootFolder === '/' || options.rootFolder === './' || options.rootFolder === ''){
-      grunt.log.warn('You have to use a folder for your cloned repos as this folder is deleted each run');
-      return false;
-    }
-
 
     // delete the repo folder before repopulating it
     var deleteOldFiles = function(path){
@@ -77,6 +71,7 @@ module.exports = function(grunt) {
       deleteOldFiles(path).then(function(){
 
         grunt.log.writeln('Cloning "'+repoURL+'" ==> '+path);
+
         var process = spawn('git', args);
         process.on('close', function(code) {
           //console.log('child process exited with code ' + code);
@@ -96,8 +91,6 @@ module.exports = function(grunt) {
       var promises = arr.map(function (el) { return iterator(el); });
       return Q.all(promises); // return the group promise
     }
-
-
 
     var repoList = [];
     function getItemList(object, path){
@@ -119,10 +112,11 @@ module.exports = function(grunt) {
 
     }
 
-
     // read in the config file.
     var config = grunt.file.readJSON(options.configFile);
 
+    // create an array of repos which included the path of each repo.
+    // works recursively.
     getItemList(config, '');
 
     // run task

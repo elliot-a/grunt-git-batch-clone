@@ -8,6 +8,9 @@
       "rust_game" : "git@github.com:benbrunton/rusteroids.git"
     },
     "frameworks": {
+      "front": {
+        "angular" : "git@github.com:angular/angular.git"
+      },
       "angular" : "git@github.com:angular/angular.git"
     }
   }
