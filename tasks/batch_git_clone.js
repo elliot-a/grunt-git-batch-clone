@@ -44,12 +44,8 @@ module.exports = function(grunt) {
       return false;
     }
 
-    // read in the config file.
-    var config = grunt.file.readJSON(options.configFile);
 
-
-    // todo - this should probably just delete the appropriate folders, not the whole thing.
-    // delete the git clones folder before repopulating it
+    // delete the repo folder before repopulating it
     var deleteOldFiles = function(path){
 
       grunt.log.writeln('Deleting folder ==> '+path);
@@ -69,13 +65,13 @@ module.exports = function(grunt) {
 
     };
 
-
+    // creates a spawn process and clones the repos
     function cloneRepo(item){
 
       var deferred = Q.defer();
 
       var repoURL = item.repo;
-      var path = options.rootFolder+'/'+item.location+'/'+item.repoName;
+      var path = item.path;
       var args = ['clone', repoURL, path];
 
       deleteOldFiles(path).then(function(){
@@ -94,6 +90,7 @@ module.exports = function(grunt) {
 
     }
 
+    // creates loopable promises list
     function map (arr, iterator) {
       // execute the func for each element in the array and collect the results
       var promises = arr.map(function (el) { return iterator(el); });
@@ -101,21 +98,35 @@ module.exports = function(grunt) {
     }
 
 
-    // prepare array of items to create
-    var items = [];
-    for(var loc in config){
-      for(var repo in config[loc]){
-        var item = {
-          location : loc,
-          repoName : repo,
-          repo     : config[loc][repo]
-        };
-        items.push(item);
+
+    var repoList = [];
+    function getItemList(object, path){
+
+      for (var prop in object){
+
+        if(typeof object[prop] === 'object'){
+          var newPath = path + (prop+'/');
+          getItemList(object[prop], newPath);
+        }else{
+          var item = {
+            path      : path+prop,
+            repo      : object[prop]
+          };
+          repoList.push(item);
+        }
+
       }
 
     }
 
-    map(items, cloneRepo).then(function(){
+
+    // read in the config file.
+    var config = grunt.file.readJSON(options.configFile);
+
+    getItemList(config, '');
+
+    // run task
+    map(repoList, cloneRepo).then(function(){
       grunt.log.writeln('All repos cloned successfully');
       done();
     },function(err){

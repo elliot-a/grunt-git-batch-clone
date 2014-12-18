@@ -1,5 +1,5 @@
 {
-  "clones": {
+  "clones-folder": {
     "promises": {
       "q" : "git@github.com:kriskowal/q.git",
       "async" : "git@github.com:caolan/async.git"
