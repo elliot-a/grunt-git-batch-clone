@@ -58,18 +58,21 @@ grunt.initConfig({
 });
 ```
 
-Your JSON file should be in this format :
+Your JSON file should be in this format, you can use https or ssh links (but see the got'ya below) :
 ```
 {
-  "clones": {
+  "clones-folder": {
     "promises": {
-      "q" : "git@github.com:kriskowal/q.git",
-      "async" : "git@github.com:caolan/async.git"
+      "q" : "https://github.com/kriskowal/q.git",
+      "async" : "https://github.com/caolan/async.git"
     },
     "rust": {
-      "rust_game" : "git@github.com:benbrunton/rusteroids.git"
+      "rust_game" : "https://github.com/benbrunton/rusteroids.git"
     },
     "frameworks": {
+      "front": {
+        "angular" : "git@github.com:angular/angular.git"
+      },
       "angular" : "git@github.com:angular/angular.git"
     }
   }
