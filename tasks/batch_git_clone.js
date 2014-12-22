@@ -73,11 +73,14 @@ module.exports = function(grunt) {
         grunt.log.writeln('---> Cloning "'+repoURL+'" ==> '+path);
 
         var process = spawn('git', args);
-        process.on('---> stdout', function(msg) {
-          grunt.log.writeln('stdout : '+msg);
+        process.stdout.on('data', function(msg) {
+          grunt.log.writeln('---> stdout : '+msg);
         });
-        process.on('---> stderr', function(msg) {
-          grunt.log.writeln('stdout : '+msg);
+        process.stderr.on('data', function(msg) {
+          grunt.log.writeln('---> stdout : '+msg);
+        });
+        process.on('uncaughtException', function(err) {
+          grunt.log.writeln('---> Caught exception: '+err);
         });
         process.on('close', function(code) {
           grunt.log.writeln('---> child process exited with code ' + code);
