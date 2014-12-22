@@ -1,6 +1,6 @@
 # grunt-batch-git-clone
 
-> Clones multiple git repos into the specified folders.
+> Clones multiple git repos into the specified folders. 
 
 ## Getting Started
 This plugin requires Grunt `~0.4.5`
@@ -46,7 +46,7 @@ The location of your .json file that describes which git repos you want to clone
 ### Usage Examples
 
 #### Default Options
-In this example, the default options are used to do something with whatever. So if the `testing` file has the content `Testing` and the `123` file had the content `1 2 3`, the generated result would be `Testing, 1 2 3.`
+The only option is the location of the JSON config file - provide this as follows : 
 
 ```js
 grunt.initConfig({
@@ -58,7 +58,7 @@ grunt.initConfig({
 });
 ```
 
-Your json file should be in this format :
+Your JSON file should be in this format :
 ```
 {
   "clones": {
