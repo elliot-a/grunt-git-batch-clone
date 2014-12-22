@@ -81,10 +81,11 @@ Your JSON file should be in this format, you can use https or ssh links (but see
 
 This will create the following paths, existing folders will be deleted if they are already there.
 ```
-/clones/promises/q
-/clones/promises/async
-/clones/rust/rust_game
-/clones/frameworks/angular
+/clones-folder/promises/q
+/clones-folder/promises/async
+/clones-folder/rust/rust_game
+/clones-folder/frameworks/front/angular
+/clones-folder/frameworks/angular
 ```
 
 The relevant git repos will then be cloned in to those folders.
