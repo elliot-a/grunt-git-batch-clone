@@ -42,13 +42,13 @@ module.exports = function(grunt) {
     // delete the repo folder before repopulating it
     var deleteOldFiles = function(path){
 
-      grunt.log.writeln('Deleting folder ==> '+path);
+      grunt.log.writeln('---> Deleting folder ==> '+path);
 
       var deferred = Q.defer();
 
       rimraf(path,  function(err){
         if(err) {
-          grunt.log.warn('There was an error deleting the existing repo folder : '+path+', error : '+err);
+          grunt.log.warn('---> There was an error deleting the existing repo folder : '+path+', error : '+err);
           deferred.reject(err);
         }else{
           deferred.resolve();
@@ -70,11 +70,17 @@ module.exports = function(grunt) {
 
       deleteOldFiles(path).then(function(){
 
-        grunt.log.writeln('Cloning "'+repoURL+'" ==> '+path);
+        grunt.log.writeln('---> Cloning "'+repoURL+'" ==> '+path);
 
         var process = spawn('git', args);
+        process.on('---> stdout', function(msg) {
+          grunt.log.writeln('stdout : '+msg);
+        });
+        process.on('---> stderr', function(msg) {
+          grunt.log.writeln('stdout : '+msg);
+        });
         process.on('close', function(code) {
-          //console.log('child process exited with code ' + code);
+          grunt.log.writeln('---> child process exited with code ' + code);
           deferred.resolve();
         });
 
@@ -121,10 +127,11 @@ module.exports = function(grunt) {
 
     // run task
     map(repoList, cloneRepo).then(function(){
-      grunt.log.writeln('All repos cloned successfully');
+      grunt.log.writeln('---| All repos cloned successfully');
       done();
     },function(err){
-      grunt.log.warn('An error has occured.');
+      grunt.log.warn('---| An error has occured whilst cloning the repos :');
+      grunt.log.write(err);
     });
 
   });
