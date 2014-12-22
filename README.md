@@ -86,6 +86,9 @@ This will create the following paths, existing folders will be deleted if they a
 
 The relevant git repos will then be cloned in to those folders.
 
+## Gotya's
+
+Bear in mind that if you choose to use this on server during deployment you should use the 'https' links to the git repos as the keys will not be available to use the 'git@' version.
 
 ## Contributing
 In lieu of a formal styleguide, take care to maintain the existing coding style. Add unit tests for any new or changed functionality. Lint and test your code using [Grunt](http://gruntjs.com/).

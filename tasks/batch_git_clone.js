@@ -81,6 +81,7 @@ module.exports = function(grunt) {
         });
         process.on('uncaughtException', function(err) {
           grunt.log.writeln('---> Caught exception: '+err);
+          deferred.reject();
         });
         process.on('close', function(code) {
           grunt.log.writeln('---> child process exited with code ' + code);
@@ -133,7 +134,7 @@ module.exports = function(grunt) {
       grunt.log.writeln('---| All repos cloned successfully');
       done();
     },function(err){
-      grunt.log.warn('---| An error has occured whilst cloning the repos :');
+      grunt.log.warn('---| An error has occurred whilst cloning the repos :');
       grunt.log.write(err);
     });
 
