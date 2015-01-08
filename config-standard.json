@@ -1,0 +1,17 @@
+{
+  "clones-standard": {
+    "promises": {
+      "q" : "https://github.com/kriskowal/q.git",
+      "async" : "https://github.com/caolan/async.git"
+    },
+    "grunt": {
+      "grunt-sass" : "https://github.com/gruntjs/grunt-contrib-sass.git"
+    },
+    "frameworks": {
+      "front": {
+        "angular" : "git@github.com:angular/angular.git"
+      },
+      "angular" : "git@github.com:angular/angular.git"
+    }
+  }
+}

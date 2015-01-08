@@ -1,6 +1,8 @@
 'use strict';
 
-var grunt = require('grunt');
+var grunt     = require('grunt');
+var rimraf    = require('rimraf');
+
 
 /*
   ======== A Handy Little Nodeunit Reference ========
@@ -22,36 +24,108 @@ var grunt = require('grunt');
     test.ifError(value)
 */
 
+
+
+
+
 exports.batch_git_clone = {
+
   setUp: function(done) {
-    // setup here if necessary
+
+    // no setup really needed
     done();
   },
 
-  default_options: function(test) {
-    /*
-    test.expect(1);
+  standard: function(test) {
 
-    var actual = grunt.file.read('tmp/default_options');
-    var expected = grunt.file.read('test/expected/default_options');
-    test.equal(actual, expected, 'should describe what the default behavior is.');
-    */
+    // read in the config file.
+    var config = grunt.file.readJSON('config-standard.json');
+    var pathList = [];
 
-    test.equal(1,1, 'test goes here');
+    // create an array of repos which included the path of each repo.
+    // works recursively.
+    getItemList(config, '');
+
+    function getItemList(object, path){
+      for (var prop in object){
+        if(typeof object[prop] === 'object'){
+          var newPath = path + (prop+'/');
+          getItemList(object[prop], newPath);
+        }else{
+          pathList.push(path+prop);
+        }
+      }
+    }
+
+    test.expect(5);
+
+    for (var i = 0; i < pathList.length; i++) {
+      test.equal(grunt.file.isDir(pathList[i]), true);
+    }
+
     test.done();
   },
-  custom_options: function(test) {
 
-    /*
-    test.expect(1);
 
-    var actual = grunt.file.read('tmp/custom_options');
-    var expected = grunt.file.read('test/expected/custom_options');
-    test.equal(actual, expected, 'should describe what the custom option(s) behavior is.');
-    */
+  withNPM: function(test) {
 
-    test.equal(1,1, 'test goes here');
+    // read in the config file.
+    var config = grunt.file.readJSON('config-with-post-script.json');
+    var pathList = [];
+
+    // create an array of repos which included the path of each repo.
+    // works recursively.
+    getItemList(config, '');
+
+    function getItemList(object, path){
+      for (var prop in object){
+        if(typeof object[prop] === 'object'){
+          var newPath = path + (prop+'/');
+          getItemList(object[prop], newPath);
+        }else{
+          pathList.push(path+prop);
+        }
+      }
+    }
+
+    test.expect(5);
+
+    for (var i = 0; i < pathList.length; i++) {
+      console.log(pathList[i]+'/node_modules');
+      test.equal(grunt.file.isDir(pathList[i]+'/node_modules'), true);
+    }
 
     test.done();
   },
+
+  withOverwrite : function(test){
+
+    // This test will be completed when I can add callback to a task in grunt,
+    // see https://github.com/gruntjs/grunt/issues/1184
+
+    /*
+    grunt.file.mkdir('clones-with-overwrite/q/this-should-be-deleted');
+
+    runTask.loadNpmTasks('batch_git_clone');
+    var task = runTask.task('batch_git_clone', {
+      default: {
+        options: {
+          configFile: 'config-with-overwrite.json',
+          overWrite: true
+        }
+      }
+    });
+
+    task.run('default', function(err){
+      console.error(err);
+      test.equal(grunt.file.isDir('clones-with-overwrite/q/this-should-be-deleted'), false);
+      test.done();
+    })
+    */
+
+    test.done();
+
+  }
+
+
 };

@@ -1,11 +1,11 @@
 {
-  "clones-folder": {
+  "clones-with-post-script": {
     "promises": {
       "q" : "https://github.com/kriskowal/q.git",
       "async" : "https://github.com/caolan/async.git"
     },
-    "rust": {
-      "rust_game" : "https://github.com/benbrunton/rusteroids.git"
+    "grunt": {
+      "grunt-sass" : "https://github.com/gruntjs/grunt-contrib-sass.git"
     },
     "frameworks": {
       "front": {

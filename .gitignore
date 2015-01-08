@@ -1,7 +1,8 @@
 node_modules
 npm-debug.log
 tmp
-clones-folder
+clones-standard
+clones-with-post-script
 .DS_Store
 .nodemonignore
 npm-debug.log

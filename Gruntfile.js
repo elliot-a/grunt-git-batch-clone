@@ -25,15 +25,21 @@ module.exports = function(grunt) {
 
     // Before generating any new files, remove any previously-created files.
     clean: {
-      tests: ['tmp'],
-      clones: ['git_clones']
+      tests: ['tmp', 'clones-with-post-script', 'clones-standard']
     },
 
     // Configuration to be run (and then tested).
     batch_git_clone: {
-      custom_options: {
+      standard: {
         options: {
-          configFile: 'sample.json'
+          configFile: 'config-standard.json'
+        }
+      },
+      withNPM:{
+        options : {
+          configFile: 'config-with-post-script.json',
+          postClone: 'npm install && bower install',
+          overWrite:true
         }
       }
     },
