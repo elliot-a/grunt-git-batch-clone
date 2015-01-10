@@ -8,6 +8,11 @@
 
 'use strict';
 
+
+// todo - npm install && bower install should not be called if the clone
+// todo - did not run due to overWrite being set the false.
+
+
 var spawn   = require('child_process').spawn;
 var exec    = require('child_process').exec;
 var rimraf  = require('rimraf');
@@ -32,7 +37,9 @@ module.exports = function(grunt) {
     var options = this.options({
       configFile:'*EMPTY*',
       postClone:'',
-      overWrite: false
+      overWrite: false,
+      npmInstall: false,
+      bowerInstall: false
     });
 
     // check if configFile option has been entered.
@@ -47,8 +54,9 @@ module.exports = function(grunt) {
       return false;
     }
 
+
     // delete the repo folder before repopulating it
-    var deleteOldFiles = function(path){
+    function deleteOldFiles(path){
 
       var deferred = Q.defer();
 
@@ -67,19 +75,58 @@ module.exports = function(grunt) {
         });
 
       }else{
-
         if(grunt.file.isDir(path)){
           grunt.log.writeln('---> Folder exists so plugin will not overwrite ==> '+path);
         }
-
-
         deferred.resolve();
       }
 
+      return deferred.promise;
+
+    }
+
+
+    // performs the clone command
+    function performCmd(repoURL, path){
+
+      var deferred = Q.defer();
+
+      if(errorOccured === true){
+        deferred.reject();
+        return deferred.promise;
+      }
+
+      if(grunt.file.isDir(path) && options.overWrite === false){
+        deferred.resolve(false);
+        return deferred.promise;
+      }
+
+      var msg = '---> Cloning "'+repoURL+'" ==> '+path;
+      var execString = 'git clone '+repoURL+' '+path;
+
+      if(options.postClone !== ''){
+        msg += ' THEN executing "'+options.postClone+'"';
+        execString += ' && cd '+path+' && '+options.postClone;
+      }
+
+      grunt.log.writeln(msg);
+
+      var child = exec(execString);
+
+      // add events for logging
+      child.stdout.on('data', function(data) {
+        grunt.log.writeln(data);
+      });
+      child.stderr.on('data', function(data) {
+        grunt.verbose.writeln(data);
+      });
+      child.on('close', function(code) {
+        deferred.resolve(true);
+      });
 
       return deferred.promise;
 
-    };
+    }
 
 
     // creates a spawn process and clones the repos
@@ -88,50 +135,23 @@ module.exports = function(grunt) {
       var deferred = Q.defer();
       var repoURL = item.repo;
       var path = item.path;
-      var args = ['clone', repoURL, path, '&&', 'pwd'];
 
-      deleteOldFiles(path).then( function(){
-
-        if(errorOccured === true){
-          deferred.reject();
-          return;
-        }
-
-        if(grunt.file.isDir(path) && options.overWrite === false){
-          deferred.resolve();
-          return;
-        }
-
-        var msg = '---> Cloning "'+repoURL+'" ==> '+path;
-        var execString = 'git clone '+repoURL+' '+path;
-
-        if(options.postClone !== ''){
-          msg += ' THEN executing "'+options.postClone+'"';
-          execString += ' && cd '+path+' && '+options.postClone;
-        }
-
-        grunt.log.writeln(msg);
-
-        var child = exec(execString);
-
-        // add events for logging
-        child.stdout.on('data', function(data) {
-          grunt.log.writeln(data);
-        });
-        child.stderr.on('data', function(data) {
-          grunt.verbose.writeln(data);
-        });
-        child.on('close', function(code) {
-          deferred.resolve();
-        });
-
+      deleteOldFiles(path).
+      then(function(){
+        return performCmd(repoURL, path);
+      }).then(function(success){
+        return npmInstall(path, success);
+      }).then(function(success){
+        return bowerInstall(path, success);
+      }).then(function(){
+        deferred.resolve();
       });
 
       return deferred.promise;
 
     }
 
-
+    // converts the json object into an array of items with paths
     function getItemList(object, path){
 
       for (var prop in object){
@@ -151,6 +171,102 @@ module.exports = function(grunt) {
 
     }
 
+    // checks for a package.json then runs npm install if there is one.
+    function npmInstall(path, success){
+
+      var deferred = Q.defer();
+
+      // 'success' is a flag passed from the perform cmd function which states whether the function ran
+      if(success === false){
+        deferred.resolve(success);
+        return deferred.promise;
+      }
+
+      var hasPackage = grunt.file.isFile(path+'/package.json');
+
+      if(options.npmInstall === true && hasPackage){
+
+        var msg = '---> Install npm dependencies ==> '+path;
+        var execString = 'cd '+path+' && npm install';
+
+        grunt.log.writeln(msg);
+
+        var child = exec(execString);
+
+        // add events for logging
+        child.stdout.on('data', function(data) {
+          grunt.log.writeln(data);
+        });
+        child.stderr.on('data', function(data) {
+          grunt.verbose.writeln(data);
+        });
+        child.on('close', function(code) {
+          deferred.resolve(success);
+        });
+
+      }else{
+
+        if(options.npmInstall === true) {
+          var msg = '---> Skipping npm install as no package JSON was detected ==> ' + path;
+          grunt.log.writeln(msg);
+        }
+
+        deferred.resolve();
+      }
+
+
+      return deferred.promise;
+
+    }
+
+
+    // checks for a bower.json then runs bower install if there is one.
+    function bowerInstall(path, success){
+
+      var deferred = Q.defer();
+
+      // 'success' is a flag passed from the perform cmd function which states whether the function ran
+      if(success === false){
+        deferred.resolve();
+        return deferred.promise;
+      }
+
+      var hasPackage = grunt.file.isFile(path+'/bower.json');
+
+      if(options.bowerInstall === true && hasPackage){
+
+        var msg = '---> Install bower dependencies ==> '+path;
+        var execString = 'cd '+path+' && bower install';
+
+        grunt.log.writeln(msg);
+
+        var child = exec(execString);
+
+        // add events for logging
+        child.stdout.on('data', function(data) {
+          grunt.log.writeln(data);
+        });
+        child.stderr.on('data', function(data) {
+          grunt.verbose.writeln(data);
+        });
+        child.on('close', function(code) {
+          deferred.resolve();
+        });
+
+      }else{
+
+        if(options.bowerInstall === true) {
+          var msg = '---> Skipping bower install as no bower.JSON was detected ==> ' + path;
+          grunt.log.writeln(msg);
+        }
+
+        deferred.resolve();
+      }
+
+
+      return deferred.promise;
+
+    }
 
     // read in the config file.
     var config = grunt.file.readJSON(options.configFile);

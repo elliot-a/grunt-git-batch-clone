@@ -50,7 +50,7 @@ Type: `String`
 Default value: ``
 
 If you need to run a command after you have cloned your repos, you should add it here. If you need to run multiple commands they should be
-separated by the && symbol. eg 'npm install && bower install'
+separated by the && symbol. eg 'grunt build && grunt anotherTask'
 
 #### options.overWrite
 Type: `Boolean`
@@ -58,6 +58,18 @@ Default value: `false`
 
 The overWrite setting stops the plugin deleting folders that already exist. So if you run plugin and the folder is already there then
 it will not do anything. If overWrite is set to true if the folder exists then it be deleted before the clone takes place.
+
+#### options.npmInstall
+Type: `Boolean`
+Default value: `false`
+
+This will call `npm install` on each repo that is cloned from git. Its first checks for a `package.json` to avoid issues.
+
+#### options.bowerInstall
+Type: `Boolean`
+Default value: `false`
+
+This will call `bower install` on each repo that is cloned from git. Its first checks for a `bower.json` to avoid issues.
 
 
 ### Usage Examples
@@ -70,7 +82,8 @@ grunt.initConfig({
   batch_git_clone: {
     options: {
       configFile:"sample.json",
-      postClone:"npm install && bower install",
+      npmInstall:true,
+      bowerInstall:true,
       overWrite:true
     }
   },
@@ -107,7 +120,7 @@ This will create the following paths, existing folders will be deleted if they a
 /clones-folder/frameworks/angular
 ```
 
-The relevant git repos will then be cloned in to those folders.
+The relevant git repos will then be cloned in to those folders, and then both `bower install` and `npm install` will be run on those repos.
 
 ## Gotya's
 

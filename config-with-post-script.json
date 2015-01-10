@@ -1,5 +1,8 @@
 {
   "clones-with-post-script": {
+    "output" : {
+      "sample" : "https://github.com/slabs-io/output-slab-demo.git"
+    },
     "promises": {
       "q" : "https://github.com/kriskowal/q.git",
       "async" : "https://github.com/caolan/async.git"
@@ -10,8 +13,7 @@
     "frameworks": {
       "front": {
         "angular" : "git@github.com:angular/angular.git"
-      },
-      "angular" : "git@github.com:angular/angular.git"
+      }
     }
   }
 }

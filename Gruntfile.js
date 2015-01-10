@@ -38,7 +38,8 @@ module.exports = function(grunt) {
       withNPM:{
         options : {
           configFile: 'config-with-post-script.json',
-          postClone: 'npm install && bower install',
+          bowerInstall:true,
+          npmInstall:true,
           overWrite:true
         }
       }
