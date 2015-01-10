@@ -2,7 +2,7 @@ node_modules
 npm-debug.log
 tmp
 clones-standard
-clones-with-post-script
+clones-with-dependencies
 .DS_Store
 .nodemonignore
 npm-debug.log

@@ -70,7 +70,7 @@ exports.batch_git_clone = {
   withNPM: function(test) {
 
     // read in the config file.
-    var config = grunt.file.readJSON('config-with-post-script.json');
+    var config = grunt.file.readJSON('config-with-dependencies.json');
     var pathList = [];
 
     // create an array of repos which included the path of each repo.
@@ -88,7 +88,7 @@ exports.batch_git_clone = {
       }
     }
 
-    test.expect(5);
+    test.expect(4);
 
     for (var i = 0; i < pathList.length; i++) {
       console.log(pathList[i]+'/node_modules');

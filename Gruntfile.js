@@ -25,7 +25,7 @@ module.exports = function(grunt) {
 
     // Before generating any new files, remove any previously-created files.
     clean: {
-      tests: ['tmp', 'clones-with-post-script', 'clones-standard']
+      tests: ['tmp', 'clones-standard']
     },
 
     // Configuration to be run (and then tested).
@@ -35,9 +35,9 @@ module.exports = function(grunt) {
           configFile: 'config-standard.json'
         }
       },
-      withNPM:{
+      withDeps:{
         options : {
-          configFile: 'config-with-post-script.json',
+          configFile: 'config-with-dependencies.json',
           bowerInstall:true,
           npmInstall:true,
           overWrite:true
