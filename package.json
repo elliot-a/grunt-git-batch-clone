@@ -1,7 +1,7 @@
 {
   "name": "grunt-batch-git-clone",
   "description": "Clones multiple git repos into specified folders.",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "homepage": "https://github.com/elliot-a/grunt-git-batch-clone",
   "author": {
     "name": "Elliot Agro",
