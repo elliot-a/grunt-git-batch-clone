@@ -4,6 +4,10 @@
 
 This plugin enables you to install and setup multiple git repos into a specified folder structure. You can then install npm and bower dependencies or run commands on each folder such as ```grunt build```.
 
+#### Help
+If you need any help, or want to request a feature just create an issue on this repo, I am actively checking and should be able to assist. Feel free to submit pull requests too !! :)
+
+
 ## Getting Started
 This plugin requires Grunt `~0.4.5`
 
