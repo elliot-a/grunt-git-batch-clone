@@ -24,8 +24,7 @@
     "node": ">= 0.8.0"
   },
   "scripts": {
-    "test": "grunt test",
-    "postinstall": "grunt"
+    "test": "grunt test"
   },
   "devDependencies": {
     "grunt": "~0.4.5",
