@@ -2,7 +2,7 @@
 
 > Clones multiple git repos into the specified folders.
 
-This plugin enables you to install and setup multiple git repos into a specified folder structure. You can then run commands on each folder such as ```npm install```.
+This plugin enables you to install and setup multiple git repos into a specified folder structure. You can then install npm and bower dependencies or run commands on each folder such as ```grunt build```.
 
 ## Getting Started
 This plugin requires Grunt `~0.4.5`
@@ -45,13 +45,6 @@ Default value: `none`
 
 The location of your .json file that describes which git repos you want to clone and where they should go.
 
-#### options.postClone
-Type: `String`
-Default value: ``
-
-If you need to run a command after you have cloned your repos, you should add it here. If you need to run multiple commands they should be
-separated by the && symbol. eg 'grunt build && grunt anotherTask'
-
 #### options.overWrite
 Type: `Boolean`
 Default value: `false`
@@ -71,11 +64,18 @@ Default value: `false`
 
 This will call `bower install` on each repo that is cloned from git. Its first checks for a `bower.json` to avoid issues.
 
+#### options.postClone
+Type: `String`
+Default value: ``
+
+If you need to run a command after you have cloned your repos, you should add it here. If you need to run multiple commands they should be
+separated by the && symbol. eg 'grunt build && grunt anotherTask' - beware of over using this option.
+
 
 ### Usage Examples
 
 #### Default Options
-The only option is the location of the JSON config file - provide this as follows : 
+Your options object should look something like this :
 
 ```js
 grunt.initConfig({
