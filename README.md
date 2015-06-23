@@ -75,6 +75,11 @@ Default value: ``
 If you need to run a command after you have cloned your repos, you should add it here. If you need to run multiple commands they should be
 separated by the && symbol. eg 'grunt build && grunt anotherTask' - beware of over using this option.
 
+#### options.depth
+Type: `Number`
+Default value: `0`
+
+Specifiy clone depth. 0 will recurse all the way down the tree.
 
 ### Usage Examples
 
