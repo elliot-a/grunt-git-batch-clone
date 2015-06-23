@@ -39,7 +39,8 @@ module.exports = function(grunt) {
       postClone:'',
       overWrite: false,
       npmInstall: false,
-      bowerInstall: false
+      bowerInstall: false,
+      depth: 0
     });
 
     // check if configFile option has been entered.
