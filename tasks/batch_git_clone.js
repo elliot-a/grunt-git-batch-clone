@@ -104,6 +104,10 @@ module.exports = function(grunt) {
       var msg = '---> Cloning "'+repoURL+'" ==> '+path;
       var execString = 'git clone '+repoURL+' '+path;
 
+      if(options.depth > 0){
+        execString += ' --depth '+options.depth;
+      }
+
       if(options.postClone !== ''){
         msg += ' THEN executing "'+options.postClone+'"';
         execString += ' && cd '+path+' && '+options.postClone;
