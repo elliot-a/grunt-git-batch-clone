@@ -9,7 +9,7 @@
     },
     "frameworks": {
       "front": {
-        "angular" : "git@github.com:angular/angular.git"
+        "ember" : "https://github.com/emberjs/ember.js"
       }
     }
   }
